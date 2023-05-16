@@ -15,7 +15,7 @@
 
 
 
-<form action="{{ route('orders.store') }}" method="POST">
+<form id="order-form" action="{{ route('orders.store') }}" method="POST">
     @csrf
 
     <div>
@@ -216,5 +216,64 @@
             entryByError.textContent = '';
         }
     });
+
+
+
+
+
+    //USING AJAX
+    document.getElementById('order-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    var form = event.target; // Get the form element
+    var formData = new FormData(form); // Create FormData object
+
+    // Create an XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+
+    // Configure the request
+    xhr.open(form.method, form.action, true);
+    xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}'); // Include CSRF token if needed
+
+    // Define the onload event handler
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Request succeeded
+        var response = xhr.responseText;
+        // Process the response as needed
+        console.log(response);
+      } else {
+        // Request failed
+        console.error('Request failed. Status:', xhr.status);
+      }
+    };
+
+    // Send the request
+    xhr.send(formData);
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
