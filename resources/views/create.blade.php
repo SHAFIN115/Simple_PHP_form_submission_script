@@ -220,43 +220,48 @@
 
 
 
+    if (document.cookie.indexOf('submission') !== -1) {
+    // If the cookie exists, prevent form submission
+    event.preventDefault();
+    alert('You have already submitted the form within the last 24 hours.');
+    } else{
 
-    //USING AJAX
-    document.getElementById('order-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent default form submission
+            // If the cookie does not exist, proceed with form submission
+            // Create a new cookie to track the submission
+            var date = new Date();
+            date.setTime(date.getTime() + (24 * 60 * 60 * 1000)); // Set expiration to 24 hours
+            document.cookie = 'submission=true; expires=' + date.toUTCString() + '; path=/';
 
-    var form = event.target; // Get the form element
-    var formData = new FormData(form); // Create FormData object
+            // Continue with the form submission process
+            var form = event.target; // Get the form element
+            var formData = new FormData(form); // Create FormData object
 
-    // Create an XMLHttpRequest object
-    var xhr = new XMLHttpRequest();
+            // Create an XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
 
-    // Configure the request
-    xhr.open(form.method, form.action, true);
-    xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}'); // Include CSRF token if needed
+            // Configure the request
+            xhr.open(form.method, form.action, true);
+            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}'); // Include CSRF token if needed
 
-    // Define the onload event handler
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        // Request succeeded
-        var response = xhr.responseText;
-        // Process the response as needed
-        console.log(response);
-      } else {
-        // Request failed
-        console.error('Request failed. Status:', xhr.status);
-      }
-    };
+            // Define the onload event handler
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                // Request succeeded
+                var response = xhr.responseText;
+                // Process the response as needed
+                console.log(response);
+                } else {
+                // Request failed
+                console.error('Request failed. Status:', xhr.status);
+                }
+            };
 
-    // Send the request
-    xhr.send(formData);
-  });
-
-
-
+            // Send the request
+            xhr.send(formData);
+}
 
 
-
+    
 
 
 
